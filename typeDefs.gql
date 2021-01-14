@@ -1,0 +1,106 @@
+type User {
+  _id: ID
+  username: String!
+  email: String!
+  password: String
+  avatar: String
+  joinDate: String
+  favorites: [Post]
+}
+
+type Post {
+  _id: ID
+  title: String!
+  imageUrl: String!
+  categories: [String]!
+  description: String!
+  createdDate: String
+  likes: Int
+  createdBy: User
+  messages: [Message]
+}
+
+type Message {
+  _id: ID
+  messageBody: String!
+  messageDate: String
+  messageUser: User!
+}
+
+type Token {
+  token: String!
+}
+
+type PostsPage {
+  posts: [Post]
+  hasMore: Boolean
+}
+
+# Likes for Post and Favorites for users
+
+type LikesFaves {
+  likes: Int
+  favorites: [Post]
+}
+##############################
+#### ROOT Type Definitions ###
+##############################
+
+type Query {
+  # Query for getting Current User's information
+  getCurrentUser: User
+
+  #get ALL Posts
+  getPosts: [Post]
+
+  getUser(username: String!): User!
+
+  # Get individiual Post
+  getPost(postId: ID!): Post!
+
+  # get user's own posts
+  getUserPosts(userId: ID!): [Post]
+
+  # Inifinit Post scrolling
+  infiniteScrollPosts(pageNum: Int!, pageSize: Int!): PostsPage
+
+  # search Posts (searchTerm is not required)
+  searchPosts(searchTerm: String): [Post]
+}
+
+type Mutation {
+  signinUser(username: String!, password: String!): Token
+
+  signupUser(username: String!, email: String!, password: String!): Token
+
+  # mutation for Post
+  addPost(
+    title: String!
+    imageUrl: String!
+    categories: [String]!
+    description: String!
+    creatorId: ID!
+  ): Post!
+
+  # mutation for Adding Message/Comment on a Post
+  addPostMessage(messageBody: String!, userId: ID!, postId: ID!): Message!
+
+  # Edit Existing Post / Update Existing Post
+  updateUserPost(
+    postId: ID!
+    userId: ID!
+    title: String!
+    imageUrl: String!
+    categories: [String]!
+    description: String!
+  ): Post!
+
+  # DELETE user Posts, and return to the client the post we deleted
+  deleteUserPost(postId: ID!): Post!
+
+  # Liking post
+  likePost(postId: ID!, username: String!): LikesFaves!
+
+  # unlike post
+  unlikePost(postId: ID!, username: String!): LikesFaves!
+}

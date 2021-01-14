@@ -1,0 +1,5 @@
+{
+    "watch": ["./"],
+    "ext": "js, css, html,hbs, gql",
+    "ignore": ["./node_modules/*", "*.gitignore", "*git*"]
+}
